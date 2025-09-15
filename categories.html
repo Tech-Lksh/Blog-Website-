@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Categories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .page-header {
+            text-align: center;
+            margin: 40px 0 60px;
+            padding: 0 20px;
+        }
+        
+        .page-header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Categories Grid */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .category-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: all 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .category-img {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0,0,0,0.2), rgba(0,0,0,0.4));
+            z-index: 1;
+        }
+        
+        .category-img i {
+            font-size: 48px;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .category-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        
+        .category-content h3 {
+            margin-bottom: 15px;
+            color: #1e293b;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .category-content p {
+            color: #64748b;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .category-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #f1f5f9;
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            background: #6e8efb;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: #5a7df9;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(106, 142, 251, 0.3);
+            gap: 12px;
+        }
+
+        /* Category Colors */
+        .technology { background: linear-gradient(45deg, #3498db, #2c7dbe); }
+        .design { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+        .business { background: linear-gradient(45deg, #2ecc71, #27ae60); }
+        .health { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .education { background: linear-gradient(45deg, #f39c12, #d35400); }
+        .travel { background: linear-gradient(45deg, #00cec9, #00a8a8); }
+        .food { background: linear-gradient(45deg, #ff7675, #e84343); }
+        .lifestyle { background: linear-gradient(45deg, #6c5ce7, #5c4bc0); }
+
+        /* Filter Section */
+        .category-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 40px 0;
+        }
+        
+        .filter-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            background: #e2e8f0;
+            color: #475569;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #6e8efb;
+            color: white;
+        }
+
+           /* Footer */
+        .blog-footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 30px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .social-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: #2563eb;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .categories-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .newsletter-form input,
+            .newsletter-form button {
+                border-radius: 50px;
+                width: 100%;
+            }
+            
+            .newsletter-section {
+                padding: 30px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .category-filters {
+                gap: 10px;
+            }
+            
+            .filter-btn {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="page-header">
+            <h1>Explore Our Categories</h1>
+            <p>Discover a wide range of topics that cater to your interests and passions</p>
+        </header>
+
+        <!-- Filter Section -->
+        <div class="category-filters">
+            <button class="filter-btn active"><i class="fas fa-border-all"></i> All Categories</button>
+            <button class="filter-btn"><i class="fas fa-fire"></i> Popular</button>
+            <button class="filter-btn"><i class="fas fa-clock"></i> Recent</button>
+        </div>
+
+        <!-- Categories Grid -->
+        <section id="categories">
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-img technology">
+                        <i class="fas fa-laptop-code"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Technology</h3>
+                        <p>Latest tech news, reviews, and innovations in the technology world. Stay updated with cutting-edge developments.</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-file-alt"></i> 128 Articles</span>
+                            <span><i class="fas fa-users"></i> 15.2K Followers</span>
+                        </div>
+                        <a href="#" class="btn">Explore</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-img design">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Design</h3>
+                        <p>UI/UX trends, graphic design inspiration, and creative concepts. Explore the art of visual communication.</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-file-alt"></i> 86 Articles</span>
+                            <span><i class="fas fa-users"></i> 9.7K Followers</span>
+                        </div>
+                        <a href="#" class="btn">Explore</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-img business">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Business</h3>
+                        <p>Entrepreneurship, marketing strategies, and business growth tips. Learn how to succeed in the business world.</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-file-alt"></i> 112 Articles</span>
+                            <span><i class="fas fa-users"></i> 12.4K Followers</span>
+                        </div>
+                        <a href="#" class="btn">Explore</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-img health">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Health</h3>
+                        <p>Fitness advice, nutrition tips, and wellness practices. Your guide to a healthier and happier lifestyle.</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-file-alt"></i> 94 Articles</span>
+                            <span><i class="fas fa-users"></i> 18.9K Followers</span>
+                        </div>
+                        <a href="#" class="btn">Explore</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-img education">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Education</h3>
+                        <p>Learning resources, educational trends, and study techniques. Expand your knowledge and skills.</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-file-alt"></i> 75 Articles</span>
+                            <span><i class="fas fa-users"></i> 8.3K Followers</span>
+                        </div>
+                        <a href="#" class="btn">Explore</a>
+                    </div>
+                </div>
+                
+                <div class="category-card">
+                    <div class="category-img travel">
+                        <i class="fas fa-plane"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Travel</h3>
+                        <p>Destination guides, travel tips, and cultural experiences. Discover the world's most amazing places.</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-file-alt"></i> 68 Articles</span>
+                            <span><i class="fas fa-users"></i> 11.5K Followers</span>
+                        </div>
+                        <a href="#" class="btn">Explore</a>
+                    </div>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-img food">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Food</h3>
+                        <p>Recipes, cooking techniques, and culinary adventures. Explore the delicious world of food and cuisine.</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-file-alt"></i> 103 Articles</span>
+                            <span><i class="fas fa-users"></i> 14.6K Followers</span>
+                        </div>
+                        <a href="#" class="btn">Explore</a>
+                    </div>
+                </div>
+
+                <div class="category-card">
+                    <div class="category-img lifestyle">
+                        <i class="fas fa-spa"></i>
+                    </div>
+                    <div class="category-content">
+                        <h3>Lifestyle</h3>
+                        <p>Home decor, personal development, and daily inspiration. Create a life you love and enjoy.</p>
+                        <div class="category-stats">
+                            <span><i class="fas fa-file-alt"></i> 91 Articles</span>
+                            <span><i class="fas fa-users"></i> 10.8K Followers</span>
+                        </div>
+                        <a href="#" class="btn">Explore</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+         <!-- Footer -->
+        <footer class="blog-footer">
+            <div class="social-links">
+                <a href="#" class="social-link">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
+            <p>© 2023 Modern Insights. All rights reserved.</p>
+        </footer>
+
+    <script>
+        // Simple filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // In a real implementation, you would filter the categories here
+                    // For this example, we'll just show an alert
+                    if(this.textContent !== 'All Categories') {
+                        alert(`Filtering by: ${this.textContent}`);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
